@@ -1,11 +1,31 @@
 {
-  "name": "cute",
-  "version": "1.0.0",
+  "name": "cute-bot",
+  "displayName": "Cute Bot",
+  "version": "0.1.0",
   "description": "Cute animals!",
   "main": "web.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "web": "node --harmony web.js",
+    "web-dev": "nodemon --harmony -e js,css,hbs,html",
+    "tunnel": "ngrok 3000"
   },
-  "author": "Stephen Eckenrode",
-  "license": "ISC"
+  "author": {
+    "name": "Stephen Eckenrode",
+    "url": "https://github.com/seckenrode"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "ac-koa": "^0.2.6",
+    "ac-koa-hipchat": "^0.2.18",
+    "koa-request": "^1.0.0"
+  },
+  "development": {
+    "localBaseUrl": "https://31642625.ngrok.com",
+    "port": 3000
+  },
+  "production": {
+    "localBaseUrl": "https://cute-bot.herokuapp.com",
+    "redisEnv": "REDISCLOUD_URL",
+    "port": "$PORT"
+  }
 }
