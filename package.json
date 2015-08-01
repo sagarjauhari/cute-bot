@@ -25,7 +25,7 @@
   },
   "production": {
     "localBaseUrl": "https://cute-bot.herokuapp.com",
-    "redisEnv": "$REDISCLOUD_URL",
+    "redisEnv": "REDISCLOUD_URL",
     "port": "$PORT"
   }
 }
