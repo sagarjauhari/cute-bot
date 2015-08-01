@@ -1,5 +1,3 @@
-Error.stackTraceLimit = Infinity;
-
 var ack = require('ac-koa').require('hipchat');
 var request = require('koa-request');
 var crypto = require('crypto');
@@ -12,19 +10,15 @@ var addon = app.addon().
             allowRoom(true).
             scopes('send_notification');
 
-addon.webhook('room_message', /^\/hello$/, function *() {
-  yield this.roomClient.sendNotification('Hi, ' + this.sender.name + '!');
-});
-
-function randomValueHex (len) {
+// Makes a random hex value of a given length
+var randomValueHex = function (len) {
     return crypto.randomBytes(Math.ceil(len/2)).
            toString('hex').
            slice(0, len);
 }
 
-var cuteMe = function *() {
-  var cacheBust = "_cache=" + randomValueHex(8);
-
+// Gets a cute animal from reddit
+var getCute = function *() {
   var subreddits = [
     "aww",
     "awwgifs",
@@ -35,10 +29,14 @@ var cuteMe = function *() {
     "Rabbits"
   ];
 
+  var cacheBust = "_cache=" + randomValueHex(8);
+
   var url = "http://reddit.com/r/" +  
             subreddits.join("+") +
             "/random.json?" +
-            cacheBust
+            cacheBust;
+
+  console.log(url);
 
   var requestOptions = {
     url: url,
@@ -50,13 +48,27 @@ var cuteMe = function *() {
 
   var response = yield request(requestOptions);
   var post = JSON.parse(response.body)[0].data.children[0];
-  var message = "<a href='" + post.data.url + "'>" +
-                "<img src='" + post.data.thumbnail + "'/>" + 
-                "<br />" + post.data.url + "</a>"
+
+  return {
+    url: post.data.url,
+    thumbnail: post.data.thumbnail,
+    subreddit: post.data.subreddit
+  }
+};
+
+// Sends a cute animal to hipchat
+var sendCute = function *() {
+  var cute = yield getCute();
+  var message = "<strong>Here's a random cute animal from " +
+                "/r/" + cute.subreddit +
+                "</strong>" +
+                "<br /><a href='" + cute.url + "'>" +
+                "<img src='" + cute.thumbnail + "'/>" + 
+                "<br />" + cute.url + "</a>"
 
   yield this.roomClient.sendNotification(message);
 };
 
-addon.webhook('room_message', /^\/cute$/, cuteMe);
+addon.webhook('room_message', /^\/cute$/, sendCute);
 
 app.listen();
