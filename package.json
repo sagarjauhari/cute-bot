@@ -5,7 +5,7 @@
   "description": "Cute animals!",
   "main": "web.js",
   "scripts": {
-    "web": "node --harmony web.js",
+    "start": "node --harmony web.js",
     "web-dev": "nodemon --harmony -e js,css,hbs,html",
     "tunnel": "ngrok 3000"
   },
