@@ -32,7 +32,7 @@ var getCute = function *() {
   var cacheBust = "_cache=" + randomValueHex(8);
 
   var url = "http://reddit.com/r/" +  
-            subreddits.join("+") +
+            subreddits[Math.floor(Math.random()*subreddits.length)] +
             "/random.json?" +
             cacheBust;
 
